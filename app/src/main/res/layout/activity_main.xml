@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.diego.appgalileo.MainActivity">
+
+    <TextView
+        android:id="@+id/tvFijo"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginStart="16dp"
+        android:text="ip-puerto:"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvPuertoIp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tvPuertoIp"
+        tools:layout_constraintBaseline_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
+    <TextView
+        android:id="@+id/tvPuertoIp"
+        android:layout_width="237dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="34dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
+        android:layout_marginTop="43dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnDireccion"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <Button
+        android:id="@+id/btnDireccion"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="103dp"
+        android:background="@android:color/holo_orange_dark"
+        android:elevation="0dp"
+        android:onClick="btnDireccion_onClick"
+        android:text="Cambiar Dirección"
+        android:textColor="@android:color/background_light"
+        android:textColorLink="@android:color/background_light"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintHorizontal_bias="0.0" />
+</android.support.constraint.ConstraintLayout>
