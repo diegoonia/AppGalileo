@@ -6,4 +6,27 @@
     android:layout_height="match_parent"
     tools:context="com.example.diego.appgalileo.DireccionActivity">
 
+    <Button
+        android:id="@+id/btnGuardar"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="303dp"
+        android:background="@android:color/holo_orange_dark"
+        android:elevation="0dp"
+        android:onClick="btnGuardar_onClick"
+        android:text="Guardar"
+        android:textColor="@android:color/background_light"
+        android:textColorLink="@android:color/background_light"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintHorizontal_bias="0.0" />
 </android.support.constraint.ConstraintLayout>
