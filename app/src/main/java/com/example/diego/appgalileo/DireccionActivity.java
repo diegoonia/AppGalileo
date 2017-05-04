@@ -20,9 +20,8 @@ import java.io.OutputStreamWriter;
 public class DireccionActivity extends AppCompatActivity {
 
     Button btnDir;
-    EditText txtPuerto, txtIp;
+    EditText txtPuerto, txtDom;
     String fileName = "config.txt";
-    String dirCompleta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +30,12 @@ public class DireccionActivity extends AppCompatActivity {
 
         btnDir = (Button) findViewById(R.id.btnGuardar);
         txtPuerto = (EditText) findViewById(R.id.etPuerto);
-        txtIp = (EditText) findViewById(R.id.etIp);
+        txtDom = (EditText) findViewById(R.id.etIp);
 
         btnDir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                saveFile(fileName, txtIp.getText().toString() + ":" + txtPuerto.getText().toString());
+                saveFile(fileName, "http://" + txtDom.getText().toString() + ":" + txtPuerto.getText().toString());
                 Intent intent = new Intent(DireccionActivity.this,MainActivity.class);
 
                 startActivity(intent);
