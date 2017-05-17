@@ -1,33 +1,32 @@
 
 package com.example.diego.appgalileo;
 
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
     String fileName = "config.txt";
-    Button btnDir, btnCon;
-    TextView tvDir;
-    TextView txtJson;
-    ProgressDialog pd;
+    Button btnDir, btnEncenderLed, btnApagarLed;
+    TextView tvDir, tvLEDGalileoEstado;
 
 
     @Override
@@ -36,30 +35,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnDir = (Button) findViewById(R.id.btnDireccion);
-        btnCon = (Button) findViewById(R.id.btnConexion);
-        tvDir = (TextView) findViewById(R.id.tvPuertoIp);
-        txtJson = (TextView) findViewById(R.id.tvJsonItem);
+        tvDir = (TextView) findViewById(R.id.tvHostPuerto);
+        tvLEDGalileoEstado = (TextView) findViewById(R.id.tvLedGalileoEstado); //Poner en este tv SI o NO
+        btnEncenderLed = (Button) findViewById(R.id.btnEncenderLED);
+        btnApagarLed = (Button) findViewById(R.id.btnApagarLED);
 
         tvDir.setText(readFile(fileName));
 
-        btnCon.setOnClickListener(new View.OnClickListener() {
+        btnDir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //new JsonTask().execute("Url address here");
-                txtJson.setText("HOLA");
-                new JsonTask().execute( tvDir.getText().toString() );
-                /*Intent myWebLink = new Intent(android.content.Intent.ACTION_VIEW);
-                myWebLink.setData(Uri.parse( tvDir.getText().toString() ));
-                startActivity(myWebLink); */
+                Intent intent = new Intent(MainActivity.this, DireccionActivity.class);
+                startActivity(intent);
             }
         });
 
-        btnDir.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this,DireccionActivity.class);
-            startActivity(intent);
-        }
+        btnEncenderLed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solicitud("cmd=encenderLedGalileo");
+            }
+        });
+
+        btnApagarLed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solicitud("cmd=apagarLedGalileo");
+            }
         });
     }
 
@@ -79,68 +81,69 @@ public class MainActivity extends AppCompatActivity {
         return text;
     }
 
+    public void solicitud(String comando) {
 
-    private class JsonTask extends AsyncTask<String, String, String> {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        protected void onPreExecute() {
-            super.onPreExecute();
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-            pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("Please wait");
-            pd.setCancelable(false);
-            pd.show();
-        }
+        String url = readFile(fileName) + "/modo=&" + comando;
 
-        protected String doInBackground(String... params) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                InputStream stream = connection.getInputStream();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                StringBuffer buffer = new StringBuffer();
-                String line = "";
-
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line+"\n");
-                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
-                } // cierra el while
-                return buffer.toString();
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (pd.isShowing()){
-                pd.dismiss();
-            }
-            txtJson.setText(result);
+        if(networkInfo != null && networkInfo.isConnected()) {
+            new DownloadWebpageTask().execute(url);
+        } else {
+            System.out.println("No hay conexión de red disponible");
         }
     }
+
+    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            Conectividad conectividad = new Conectividad();
+            return conectividad.GetArduino(urls[0]);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if(result != null) {
+                System.out.println(result);
+            } else {
+                System.out.println("No network connection available.");
+            }
+        }
+    }
+
+    public class Conectividad {
+
+        private String datos = null;
+        public String GetArduino(String urlString){
+
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                if(httpURLConnection.getResponseCode() == 200){
+                    InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String linea;
+                    while ((linea = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(linea);
+                    }
+
+                    datos = stringBuilder.toString();
+                    httpURLConnection.disconnect();
+                }
+
+            } catch (IOException error) {
+                return null;
+            }
+
+            return datos;
+        }
+    }
+
+
 
 
 }

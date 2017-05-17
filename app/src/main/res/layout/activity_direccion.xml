@@ -7,7 +7,7 @@
     tools:context="com.example.diego.appgalileo.DireccionActivity">
 
     <EditText
-        android:id="@+id/etIp"
+        android:id="@+id/etHost"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -15,7 +15,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="98dp"
-        android:hint="Ip"
+        android:hint="Host"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/colorPrimary"
         android:textSize="24sp"
@@ -41,7 +41,7 @@
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etIp"
+        app:layout_constraintTop_toBottomOf="@+id/etHost"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"

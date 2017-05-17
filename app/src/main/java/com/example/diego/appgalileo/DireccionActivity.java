@@ -2,25 +2,19 @@ package com.example.diego.appgalileo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 public class DireccionActivity extends AppCompatActivity {
 
     Button btnDir;
-    EditText txtPuerto, txtDom;
+    EditText txtPuerto, txtHost;
     String fileName = "config.txt";
 
     @Override
@@ -30,12 +24,12 @@ public class DireccionActivity extends AppCompatActivity {
 
         btnDir = (Button) findViewById(R.id.btnGuardar);
         txtPuerto = (EditText) findViewById(R.id.etPuerto);
-        txtDom = (EditText) findViewById(R.id.etIp);
+        txtHost = (EditText) findViewById(R.id.etHost);
 
         btnDir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveFile(fileName, "http://" + txtDom.getText().toString() + ":" + txtPuerto.getText().toString());
+                saveFile(fileName, "http://" + txtHost.getText().toString() + ":" + txtPuerto.getText().toString());
                 Intent intent = new Intent(DireccionActivity.this,MainActivity.class);
 
                 startActivity(intent);
