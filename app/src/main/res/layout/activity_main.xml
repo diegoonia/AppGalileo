@@ -148,4 +148,39 @@
         android:layout_marginLeft="9dp"
         android:layout_marginRight="9dp" />
 
+    <TextView
+        android:id="@+id/tvMicrofono"
+        android:layout_width="0dp"
+        android:layout_height="33dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="asd"
+        android:textColor="@android:color/background_light"
+        android:textSize="24sp"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="19dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+
+    <ImageButton
+        android:id="@+id/imgBtnMicrofono"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:foregroundTint="@color/colorPrimaryDark"
+        android:tint="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toTopOf="@+id/tvMicrofono"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:srcCompat="@android:drawable/ic_btn_speak_now"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1" />
+
 </android.support.constraint.ConstraintLayout>

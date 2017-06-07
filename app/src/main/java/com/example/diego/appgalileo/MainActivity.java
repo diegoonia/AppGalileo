@@ -1,33 +1,34 @@
 
 package com.example.diego.appgalileo;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    String comandoVoz = "";
     String fileName = "config.txt";
     Button btnDir, btnEncenderLed, btnApagarLed;
-    TextView tvDir, tvLEDGalileoEstado;
-
+    TextView tvDir, tvLEDGalileoEstado, tvMic;
+    ImageButton imgBtnMic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
         btnDir = (Button) findViewById(R.id.btnDireccion);
         tvDir = (TextView) findViewById(R.id.tvHostPuerto);
         tvLEDGalileoEstado = (TextView) findViewById(R.id.tvLedGalileoEstado); //Poner en este tv SI o NO
+        tvMic = (TextView) findViewById(R.id.tvMicrofono);
         btnEncenderLed = (Button) findViewById(R.id.btnEncenderLED);
         btnApagarLed = (Button) findViewById(R.id.btnApagarLED);
+        imgBtnMic = (ImageButton) findViewById(R.id.imgBtnMicrofono);
 
         tvDir.setText(readFile(fileName));
 
@@ -63,7 +66,46 @@ public class MainActivity extends AppCompatActivity {
                 solicitud("cmd=apagarLedGalileo");
             }
         });
+
+        imgBtnMic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es");
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "es");
+                intent.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, "es");
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+
+                try {
+                    startActivityForResult(intent, 1);
+                } catch (ActivityNotFoundException error) {
+                    Toast.makeText(getApplicationContext(), "Reconocimiento de voz no soportado", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent datos) {
+        tvMic = (TextView) findViewById(R.id.tvMicrofono);
+        if(resultCode == Activity.RESULT_OK && datos != null) {
+            ArrayList<String> text = datos.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            comandoVoz = text.get(0);
+            tvMic.setText(comandoVoz.toUpperCase());
+
+            if(comandoVoz.toUpperCase().equals("ENCENDER LED")) {
+                solicitud("cmd=encenderLedGalileo");
+            }
+
+            if(comandoVoz.toUpperCase().equals("APAGAR LED")) {
+                solicitud("cmd=apagarrLedGalileo");
+            }
+
+        }
+    }
+
+
 
     public String readFile(String file){
         String text = " ";
@@ -83,8 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void solicitud(String comando) {
 
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
@@ -113,37 +154,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class Conectividad {
-
-        private String datos = null;
-        public String GetArduino(String urlString){
-
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                if(httpURLConnection.getResponseCode() == 200){
-                    InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                    StringBuilder stringBuilder = new StringBuilder();
-                    String linea;
-                    while ((linea = bufferedReader.readLine()) != null) {
-                        stringBuilder.append(linea);
-                    }
-
-                    datos = stringBuilder.toString();
-                    httpURLConnection.disconnect();
-                }
-
-            } catch (IOException error) {
-                return null;
-            }
-
-            return datos;
-        }
-    }
-
 
 
 
 }
+
+
