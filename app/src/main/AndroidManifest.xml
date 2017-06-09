@@ -5,8 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />           // ver si hace falta
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DireccionActivity" />
+        <activity android:name="com.example.diego.appgalileo.DireccionActivity" />
+        <activity android:name="com.example.diego.appgalileo.TemperaturaActivity"/>
     </application>
 
 </manifest>
