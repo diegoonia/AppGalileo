@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -26,8 +30,9 @@ import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener {
 
     String comandoVoz = "";
     String fileName = "config.txt";
@@ -40,6 +45,9 @@ public class MainActivity extends Activity {
     Sensores sensoresItem;
     ImageView imgHombrecito;
     int tempRealAnt, tempIdealAnt;
+    long last_update = 0, last_movement = 0;
+    float prevX = 0, prevY = 0, prevZ = 0;
+    float curX = 0, curY = 0, curZ = 0;
 
     Activity a;
     Context context;
@@ -80,6 +88,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, TemperaturaActivity.class);
+                intent.putExtra("tempIdeal", sensoresItem.getTemperaturaIdeal());
                 startActivity(intent);
             }
         });
@@ -121,7 +130,7 @@ public class MainActivity extends Activity {
 
     }
 
-
+    // LOGICA DE MICROFONO *********************************************************************
     public void onActivityResult(int requestCode, int resultCode, Intent datos) {
         tvMic = (TextView) findViewById(R.id.tvMicrofono);
         if(resultCode == Activity.RESULT_OK && datos != null) {
@@ -188,9 +197,8 @@ public class MainActivity extends Activity {
         }
     }
 
-
+    // LOGICA DE JSON *********************************************************************
     private class GetContacts extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -286,10 +294,76 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-
-
-
         }
-
     }
+
+    //CUANDO SACUDO EL CELULAR *********************************************************************
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        synchronized (this) {
+            long current_time = event.timestamp;
+
+            curX = event.values[0];
+            curY = event.values[1];
+            curZ = event.values[2];
+
+            if (prevX == 0 && prevY == 0 && prevZ == 0) {
+                last_update = current_time;
+                last_movement = current_time;
+                prevX = curX;
+                prevY = curY;
+                prevZ = curZ;
+            }
+
+            long time_difference = current_time - last_update;
+            if(time_difference > 0) {
+                float movement = Math.abs((curX + curY + curZ) -
+                        (prevX - prevY - prevZ)) / time_difference;
+                int limit = 2000;
+                float min_movement = 3E-6f;
+                if (movement > min_movement) {
+                    if (current_time - last_movement >= limit) {
+                        Toast.makeText(getApplicationContext()
+                                , "Hay movimiento de " + movement, Toast.LENGTH_SHORT).show();
+                        /*
+                        if(estadoVentana == 0) {
+                            solicitud("?abrirVentana");
+                            estadoVentana = 1;
+                        } else {
+                            solicitud("?cerrarVentana");
+                            estadoVentana = 0;
+                        }
+                        */
+
+                    }
+                    last_movement = current_time;
+                }
+                prevX = curX;
+                prevY = curY;
+                prevZ = curZ;
+                last_update = current_time;
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        if(sensors.size() > 0) {
+            sensorManager.registerListener(this, sensors.get(0), SensorManager.SENSOR_DELAY_GAME);
+        }
+    }
+
+    @Override
+    protected void  onStop() {
+        super.onStop();
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 }

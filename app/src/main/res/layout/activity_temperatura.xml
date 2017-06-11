@@ -6,4 +6,73 @@
     android:layout_height="match_parent"
     tools:context="com.example.diego.appgalileo.TemperaturaActivity">
 
+    <Button
+        android:id="@+id/btnSetTemp"
+        android:layout_width="0dp"
+        android:layout_height="51dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@android:color/holo_green_dark"
+        android:elevation="0dp"
+        android:text="SETEAR TEMPERATURA"
+        android:textColor="@android:color/background_light"
+        android:textColorLink="@android:color/background_light"
+        android:textSize="18sp"
+        android:visibility="visible"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="68dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+
+    <TextView
+        android:id="@+id/tvNumero"
+        android:layout_width="174dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="119dp"
+        android:text="25"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="150sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <Button
+        android:id="@+id/btnMas"
+        android:layout_width="88dp"
+        android:layout_height="57dp"
+        android:text="+"
+        android:textSize="36sp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnMenos"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toTopOf="@+id/btnMenos"
+        app:layout_constraintLeft_toRightOf="@+id/tvNumero"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btnMenos"
+        android:layout_width="88dp"
+        android:layout_height="56dp"
+        android:text="-"
+        android:textSize="36sp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvNumero"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvNumero"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintVertical_bias="0.504" />
 </android.support.constraint.ConstraintLayout>
