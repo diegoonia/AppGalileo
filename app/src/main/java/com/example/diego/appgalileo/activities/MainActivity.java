@@ -1,4 +1,4 @@
-package com.example.diego.appgalileo;
+package com.example.diego.appgalileo.activities;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -23,6 +23,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.diego.appgalileo.Conectividad;
+import com.example.diego.appgalileo.JSONParser;
+import com.example.diego.appgalileo.R;
+import com.example.diego.appgalileo.Sensores;
 
 import org.json.JSONArray;
 import org.json.JSONException;

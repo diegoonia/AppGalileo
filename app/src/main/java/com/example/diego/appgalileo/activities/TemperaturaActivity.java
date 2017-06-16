@@ -1,4 +1,4 @@
-package com.example.diego.appgalileo;
+package com.example.diego.appgalileo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.diego.appgalileo.R;
 
 public class TemperaturaActivity extends AppCompatActivity {
 
@@ -27,8 +29,8 @@ public class TemperaturaActivity extends AppCompatActivity {
         tvi = (TextView) findViewById(R.id.tvNumero);
 
         //ver si esto funca, es para pasar el parametro de la temperatura del MainActivity a este
-        //Bundle bundle = getIntent().getExtras();
-        //tvi.setText(bundle.getString("tempIdeal"));
+        Bundle bundle = getIntent().getExtras();
+        tvi.setText(bundle.getString("tempIdeal"));
 
 
         btnSetTemp.setOnClickListener(new View.OnClickListener() {
